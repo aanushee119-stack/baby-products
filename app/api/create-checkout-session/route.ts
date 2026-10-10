@@ -22,8 +22,8 @@ export async function POST(request: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       line_items: line_items,
       mode: 'payment',
-      success_url: 'http://localhost:3000/success',
-      cancel_url: 'http://localhost:3000/payment',
+      success_url: `${request.headers.get('origin')}/success`,
+      cancel_url: `${request.headers.get('origin')}/payment`,
     })
 
     return NextResponse.json({ url: session.url })
