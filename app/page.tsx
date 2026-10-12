@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <div style={{ padding: '20px' }}>
-     
+      <h1 style={{ textAlign: 'center' }}>Welcome to Baby Shop</h1>
       {error && <p>Error: {error}</p>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
         {products.map((product) => (
