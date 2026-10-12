@@ -34,11 +34,18 @@ export default function Home() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
         {products.map((product) => (
           <div key={product.id} style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px' }}>
-            <h3>{product.name}</h3>
-            <p>Price: ${product.price}</p>
-            <p>{product.description}</p>
-            <button onClick={() => addToCart(product)}>Add to Cart</button>
-          </div>
+  {product.image_url && (
+    <img
+      src={product.image_url}
+      alt={product.name}
+      style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '6px', marginBottom: '10px' }}
+    />
+  )}
+  <h3>{product.name}</h3>
+  <p>Price: ${product.price}</p>
+  <p>{product.description}</p>
+  <button onClick={() => addToCart(product)}>Add to Cart</button>
+</div>
         ))}
       </div>
     </div>
