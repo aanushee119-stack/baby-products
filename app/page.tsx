@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <div style={{ padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Baby Products</h1>
+        
         <Link href="/cart">Cart ({totalItems})</Link>
       </div>
       {error && <p>Error: {error}</p>}
