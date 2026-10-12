@@ -26,10 +26,7 @@ export default function Home() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        
-        <Link href="/cart">Cart ({totalItems})</Link>
-      </div>
+     
       {error && <p>Error: {error}</p>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
         {products.map((product) => (
