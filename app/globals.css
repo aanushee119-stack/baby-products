@@ -24,3 +24,138 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.site-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px clamp(18px, 5vw, 48px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.site-navbar__brand {
+  color: #111827;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.site-navbar__link {
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: #374151;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.site-navbar__link:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.site-navbar__cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  background: linear-gradient(135deg, #f472b6 0%, #8b5cf6 100%);
+  box-shadow: 0 10px 22px rgba(168, 85, 247, 0.24);
+}
+
+.site-navbar__cart:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #ec4899 0%, #7c3aed 100%);
+  transform: translateY(-1px);
+}
+
+.site-navbar__count {
+  display: inline-grid;
+  min-width: 22px;
+  height: 22px;
+  place-items: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  color: #7c3aed;
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.site-navbar__admin {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.site-navbar__toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.site-navbar__toggle span {
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: #374151;
+}
+
+@media (max-width: 640px) {
+  .site-navbar {
+    flex-wrap: wrap;
+    padding: 12px 18px;
+  }
+
+  .site-navbar__brand {
+    font-size: 1.25rem;
+  }
+
+  .site-navbar__toggle {
+    display: flex;
+  }
+
+  .site-navbar__links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 8px 0 4px;
+  }
+
+  .site-navbar__links--open {
+    display: flex;
+  }
+
+  .site-navbar__link {
+    padding: 12px 14px;
+  }
+
+  .site-navbar__cart {
+    justify-content: space-between;
+  }
+}
