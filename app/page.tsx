@@ -26,9 +26,9 @@ export default function Home() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1 style={{ textAlign: 'center' }}>Welcome to Baby Shop</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '24px' ,fontWeight: 'bold',color: '#333' }}>Welcome to Baby Shop</h1>
       {error && <p>Error: {error}</p>}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+       <div style={{ display : 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
         {products.map((product) => (
           <div key={product.id} style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px' }}>
   {product.image_url && (
@@ -41,7 +41,9 @@ export default function Home() {
   <h3>{product.name}</h3>
   <p>Price: ${product.price}</p>
   <p>{product.description}</p>
-  <button onClick={() => addToCart(product)}>Add to Cart</button>
+  <button onClick={() => addToCart(product)} style={{ width: '100%', padding: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer',fontSize: '16px',fontWeight: 'bold' }}>
+    Add to Cart
+  </button>
 </div>
         ))}
       </div>

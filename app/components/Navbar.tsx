@@ -25,7 +25,7 @@ export default function Navbar() {
         Baby Products
       </Link>
 
-      <div style={{ display: 'flex', gap: '25px', alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: '20px', alignItems: 'center',flexWrap: 'wrap' }}>
         <Link href="/" style={{ textDecoration: 'none', color: '#333' }}>Home</Link>
         <Link href="/cart" style={{ textDecoration: 'none', color: '#333' }}>
           Cart ({itemCount})
