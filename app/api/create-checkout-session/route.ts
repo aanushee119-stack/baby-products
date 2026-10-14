@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const items = body.items
+    const metadata = body.metadata
 
     const line_items = items.map((item: any) => ({
       price_data: {
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
         },
         unit_amount: item.price,
       },
-      quantity: 1,
+      quantity: item.quantity,
     }))
 
     const session = await stripe.checkout.sessions.create({
@@ -24,6 +25,7 @@ export async function POST(request: NextRequest) {
       mode: 'payment',
       success_url: `${request.headers.get('origin')}/success`,
       cancel_url: `${request.headers.get('origin')}/payment`,
+      metadata: metadata,
     })
 
     return NextResponse.json({ url: session.url })

@@ -18,24 +18,35 @@ export default function CheckoutPage() {
   )
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+     e.preventDefault()
+    const total=cart.reduce((total: number, item: any) => total + item.price * item.quantity, 0)
+   
     if (cart.length === 0) return
 
     setSubmitting(true)
     setError('')
 
     try {
-      const orderData = {
-        customer_name: name,
-        customer_email: email,
-        customer_phone: phone,
-        customer_address: address,
-        total_price: subtotal,
-        items: cart,
-      }
+     const orderData = {
+  customer_name: name,
+  customer_email: email,
+  customer_phone: phone,
+  customer_address: address,
+  total_price: total,
+  items: cart
+}
+
+const metadata = {
+  customer_name: name,
+  customer_email: email,
+  customer_phone: phone,
+  customer_address: address,
+  total: total.toString(),
+  items: JSON.stringify(cart)
+}
 
       localStorage.setItem('pendingOrder', JSON.stringify(orderData))
-
+     
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -44,7 +55,8 @@ export default function CheckoutPage() {
             name: item.name,
             price: Math.round(item.price * 100),
             quantity: item.quantity
-          }))
+          })),
+          metadata: metadata
         })
       })
 
