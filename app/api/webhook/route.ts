@@ -26,9 +26,27 @@ export async function POST(request: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
 
-    console.log('Payment successful for session:', session.id)
+    try {
+      const metadata = session.metadata as any
 
-    // We will add order-saving logic here in the next step
+      const { error } = await supabase.from('orders').insert({
+        customer_name: metadata.customer_name,
+        customer_email: metadata.customer_email,
+        customer_phone: metadata.customer_phone,
+        customer_address: metadata.customer_address,
+        total: parseFloat(metadata.total),
+        items_summary: metadata.items_summary,
+        order_status: 'paid'
+      })
+
+      if (error) {
+        console.error('Error saving order:', error)
+      } else {
+        console.log('Order saved successfully for session:', session.id)
+      }
+    } catch (err) {
+      console.error('Webhook error:', err)
+    }
   }
 
   return NextResponse.json({ received: true })

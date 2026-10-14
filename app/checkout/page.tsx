@@ -42,7 +42,7 @@ const metadata = {
   customer_phone: phone,
   customer_address: address,
   total: total.toString(),
-  items: JSON.stringify(cart)
+  items_summary: cart.map((item: any) => `${item.name} x ${item.quantity}`).join(', ')
 }
 
       localStorage.setItem('pendingOrder', JSON.stringify(orderData))
