@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         customer_phone: metadata.customer_phone,
         customer_address: metadata.customer_address,
         total: parseFloat(metadata.total),
-        items_summary: metadata.items_summary,
+        items: { summary: metadata.items_summary },
         order_status: 'paid'
       })
 
