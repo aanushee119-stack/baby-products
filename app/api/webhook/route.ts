@@ -1,13 +1,14 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import {Resend} from 'resend'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
-
+const resend =new Resend(process.env.RESEND_API_KEY!)
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(request: NextRequest) {
@@ -40,10 +41,18 @@ export async function POST(request: NextRequest) {
       })
 
       if (error) {
-        console.error('Error saving order:', error)
-      } else {
-        console.log('Order saved successfully for session:', session.id)
-      }
+     console.error('Error saving order:', error)
+    } else {
+     console.log('Order saved successfully for session:', session.id)
+  
+    // Send confirmation email
+     await resend.emails.send({
+    from: 'noreply@resend.dev',
+    to: metadata.customer_email,
+    subject: 'Order Confirmation',
+    html: ` Thank you for your order! Order Total: $${metadata.total} We will ship your items soon. `
+    })
+}
     } catch (err) {
       console.error('Webhook error:', err)
     }
