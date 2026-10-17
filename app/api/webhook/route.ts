@@ -46,12 +46,46 @@ export async function POST(request: NextRequest) {
      console.log('Order saved successfully for session:', session.id)
   
     // Send confirmation email
-     await resend.emails.send({
-    from: 'noreply@resend.dev',
+    await resend.emails.send({
+    from: 'onboarding@resend.dev',
     to: metadata.customer_email,
-    subject: 'Order Confirmation',
-    html: ` Thank you for your order! Order Total: $${metadata.total} We will ship your items soon. `
-    })
+    subject: 'Your Baby Products Order Confirmation',
+    html: `
+    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <div style="background-color: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+        <h1 style="margin: 0;">🍼 Baby Products</h1>
+      </div>
+      
+      <div style="padding: 30px; background-color: #f9f9f9; border-radius: 0 0 8px 8px;">
+        <h2 style="color: #2c3e50;">Thank you, ${metadata.customer_name}!</h2>
+        <p style="color: #555; font-size: 16px;">Your order has been confirmed and will be shipped soon.</p>
+        
+        <div style="background-color: white; padding: 20px; border-radius: 6px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #2c3e50;">Order Summary</h3>
+          <p style="color: #555;"><strong>Total:</strong> $${metadata.total}</p>
+          <p style="color: #555;"><strong>Items:</strong> ${metadata.items_summary}</p>
+        </div>
+
+        <div style="background-color: white; padding: 20px; border-radius: 6px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #2c3e50;">Shipping Address</h3>
+          <p style="color: #555;">${metadata.customer_address}</p>
+          <p style="color: #555;">Phone: ${metadata.customer_phone}</p>
+        </div>
+
+        <div style="text-align: center; margin: 25px 0;">
+  <a href="https://baby-products-tau.vercel.app/track-order?email=${metadata.customer_email}" 
+     style="background-color: #2c3e50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+    Track Your Order
+  </a>
+</div>
+
+<p style="color: #888; font-size: 14px; text-align: center; margin-top: 30px;">
+  Questions? Reply to this email and we'll help you out.
+</p>
+      </div>
+    </div>
+  `
+})
 }
     } catch (err) {
       console.error('Webhook error:', err)
