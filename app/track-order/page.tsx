@@ -1,13 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '../supabaseClient'
 
 export default function TrackOrderPage() {
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [orders, setOrders] = useState<any[]>([])
   const [searched, setSearched] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const emailFromUrl = searchParams.get('email')
+    if (emailFromUrl) {
+      setEmail(emailFromUrl)
+    }
+  }, [searchParams])
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
