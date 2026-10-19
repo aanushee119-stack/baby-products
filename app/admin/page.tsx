@@ -8,15 +8,58 @@ import { supabase } from '../supabaseClient'
 const inputStyle = {
   display: 'block',
   width: '100%',
-  padding: '8px',
-  marginTop: '4px',
+  padding: '12px 14px',
+  marginTop: '6px',
+  border: '1px solid #dbeafe',
+  borderRadius: '12px',
+  background: '#f8fafc',
+  color: '#0f172a',
+  outline: 'none',
+  fontSize: '0.96rem',
+  boxSizing: 'border-box' as const,
 } as const
 
 const cardStyle = {
-  border: '1px solid #ccc',
-  padding: '15px',
-  borderRadius: '8px',
-  marginBottom: '12px',
+  border: '1px solid #e2e8f0',
+  padding: '20px',
+  borderRadius: '20px',
+  marginBottom: '18px',
+  background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+  boxShadow: '0 14px 35px rgba(15, 23, 42, 0.06)',
+} as const
+
+const pageStyle = {
+  minHeight: '100vh',
+  padding: '32px 20px 60px',
+  background: 'linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%)',
+  color: '#0f172a',
+} as const
+
+const panelStyle = {
+  maxWidth: '1100px',
+  margin: '0 auto',
+} as const
+
+const primaryButtonStyle = {
+  border: 'none',
+  borderRadius: '12px',
+  padding: '11px 18px',
+  fontWeight: 700,
+  fontSize: '0.94rem',
+  background: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',
+  color: '#fff',
+  cursor: 'pointer',
+  boxShadow: '0 12px 24px rgba(168, 85, 247, 0.25)',
+} as const
+
+const secondaryButtonStyle = {
+  border: '1px solid #dbeafe',
+  borderRadius: '12px',
+  padding: '10px 16px',
+  fontWeight: 600,
+  background: '#fff',
+  color: '#334155',
+  cursor: 'pointer',
 } as const
 
 export default function AdminPage() {
@@ -199,168 +242,199 @@ export default function AdminPage() {
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '900px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-        <h1>Admin Dashboard</h1>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <Link href="/">← Back to store</Link>
-          <button type="button" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
-      </div>
-
-      {error && <p style={{ color: 'crimson' }}>Error: {error}</p>}
-      {loading && <p>Loading...</p>}
-
-      <section style={{ marginTop: '32px' }}>
-        <h2>Products ({products.length})</h2>
-
-        <form
-          onSubmit={handleAddProduct}
-          style={{ ...cardStyle, display: 'flex', flexDirection: 'column', gap: '12px' }}
+    <div style={pageStyle}>
+      <div style={panelStyle}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '14px',
+            flexWrap: 'wrap',
+            marginBottom: '28px',
+            padding: '20px 24px',
+            borderRadius: '24px',
+            background: 'rgba(255,255,255,0.7)',
+            border: '1px solid rgba(148, 163, 184, 0.2)',
+            boxShadow: '0 18px 36px rgba(15, 23, 42, 0.06)',
+          }}
         >
-          <h3 style={{ margin: 0 }}>Add new product</h3>
-          <label>
-            Name
-            <input
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              style={inputStyle}
-            />
-          </label>
-          <label>
-            Price
-            <input
-              required
-              type="number"
-              min="0"
-              step="0.01"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              style={inputStyle}
-            />
-          </label>
-          <label>
-            Description
-            <textarea
-              required
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-              style={inputStyle}
-            />
-          </label>
-          <label>
-            Product Image
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-              style={inputStyle}
-            />
-          </label>
-          <button type="submit" disabled={submitting} style={{ padding: '10px', width: 'fit-content' }}>
-            {submitting ? 'Adding...' : 'Add product'}
-          </button>
-        </form>
+          <div>
+            <p style={{ margin: 0, color: '#8b5cf6', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              Store control
+            </p>
+            <h1 style={{ margin: '8px 0 0', fontSize: 'clamp(2rem, 5vw, 2.8rem)', letterSpacing: '-0.05em' }}>Admin Dashboard</h1>
+          </div>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <Link href="/" style={{ textDecoration: 'none', color: '#4f46e5', fontWeight: 700 }}>
+              ← Back to store
+            </Link>
+            <button type="button" onClick={handleLogout} style={secondaryButtonStyle}>
+              Logout
+            </button>
+          </div>
+        </div>
 
-        {products.length === 0 && !loading ? (
-          <p>No products yet.</p>
-        ) : (
-          products.map((product) => (
-            <div key={product.id} style={cardStyle}>
-              {editingId === product.id ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <label>
-                    Name
-                    <input
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      style={inputStyle}
-                    />
-                  </label>
-                  <label>
-                    Price
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={editPrice}
-                      onChange={(e) => setEditPrice(e.target.value)}
-                      style={inputStyle}
-                    />
-                  </label>
-                  <label>
-                    Description
-                    <textarea
-                      value={editDescription}
-                      onChange={(e) => setEditDescription(e.target.value)}
-                      rows={3}
-                      style={inputStyle}
-                    />
-                  </label>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button type="button" onClick={() => handleUpdateProduct(product.id)}>
-                      Save
-                    </button>
-                    <button type="button" onClick={cancelEdit}>
-                      Cancel
-                    </button>
+        {error && <p style={{ color: '#dc2626', background: '#fef2f2', border: '1px solid #fecaca', padding: '12px 14px', borderRadius: '12px', marginBottom: '20px', fontWeight: 600 }}>Error: {error}</p>}
+        {loading && <p style={{ color: '#475569', fontWeight: 600 }}>Loading...</p>}
+
+        <section style={{ marginTop: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <h2 style={{ margin: 0, fontSize: '1.6rem', letterSpacing: '-0.04em' }}>Products</h2>
+            <span style={{ display: 'inline-flex', minWidth: '30px', height: '30px', alignItems: 'center', justifyContent: 'center', padding: '0 10px', borderRadius: '999px', background: '#ede9fe', color: '#6d28d9', fontSize: '0.85rem', fontWeight: 700 }}>{products.length}</span>
+          </div>
+
+          <form
+            onSubmit={handleAddProduct}
+            style={{ ...cardStyle, display: 'flex', flexDirection: 'column', gap: '14px' }}
+          >
+            <h3 style={{ margin: 0, fontSize: '1.15rem', letterSpacing: '-0.03em' }}>Add new product</h3>
+            <label style={{ fontWeight: 600, color: '#334155' }}>
+              Name
+              <input
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                style={inputStyle}
+              />
+            </label>
+            <label style={{ fontWeight: 600, color: '#334155' }}>
+              Price
+              <input
+                required
+                type="number"
+                min="0"
+                step="0.01"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                style={inputStyle}
+              />
+            </label>
+            <label style={{ fontWeight: 600, color: '#334155' }}>
+              Description
+              <textarea
+                required
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                style={{ ...inputStyle, resize: 'vertical' }}
+              />
+            </label>
+            <label style={{ fontWeight: 600, color: '#334155' }}>
+              Product Image
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                style={{ ...inputStyle, padding: '10px 12px' }}
+              />
+            </label>
+            <button type="submit" disabled={submitting} style={{ ...primaryButtonStyle, width: 'fit-content' }}>
+              {submitting ? 'Adding...' : 'Add product'}
+            </button>
+          </form>
+
+          {products.length === 0 && !loading ? (
+            <p style={{ color: '#64748b', padding: '16px 4px' }}>No products yet.</p>
+          ) : (
+            products.map((product) => (
+              <div key={product.id} style={cardStyle}>
+                {editingId === product.id ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <label style={{ fontWeight: 600, color: '#334155' }}>
+                      Name
+                      <input
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        style={inputStyle}
+                      />
+                    </label>
+                    <label style={{ fontWeight: 600, color: '#334155' }}>
+                      Price
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={editPrice}
+                        onChange={(e) => setEditPrice(e.target.value)}
+                        style={inputStyle}
+                      />
+                    </label>
+                    <label style={{ fontWeight: 600, color: '#334155' }}>
+                      Description
+                      <textarea
+                        value={editDescription}
+                        onChange={(e) => setEditDescription(e.target.value)}
+                        rows={3}
+                        style={{ ...inputStyle, resize: 'vertical' }}
+                      />
+                    </label>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                      <button type="button" onClick={() => handleUpdateProduct(product.id)} style={primaryButtonStyle}>
+                        Save
+                      </button>
+                      <button type="button" onClick={cancelEdit} style={secondaryButtonStyle}>
+                        Cancel
+                      </button>
+                    </div>
                   </div>
+                ) : (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+                    <div>
+                      <h3 style={{ margin: '0 0 8px', fontSize: '1.2rem', letterSpacing: '-0.03em' }}>{product.name}</h3>
+                      <p style={{ margin: '6px 0', color: '#6d28d9', fontWeight: 800, fontSize: '1.15rem' }}>${product.price}</p>
+                      <p style={{ margin: '6px 0', color: '#475569', lineHeight: 1.6 }}>{product.description}</p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                      <button type="button" onClick={() => startEdit(product)} style={secondaryButtonStyle}>
+                        Edit
+                      </button>
+                      <button type="button" onClick={() => handleDeleteProduct(product.id)} style={{ ...secondaryButtonStyle, borderColor: '#fecaca', color: '#b91c1c', background: '#fff5f5' }}>
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+        </section>
+
+        <section style={{ marginTop: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <h2 style={{ margin: 0, fontSize: '1.6rem', letterSpacing: '-0.04em' }}>Orders</h2>
+            <span style={{ display: 'inline-flex', minWidth: '30px', height: '30px', alignItems: 'center', justifyContent: 'center', padding: '0 10px', borderRadius: '999px', background: '#dbeafe', color: '#1d4ed8', fontSize: '0.85rem', fontWeight: 700 }}>{orders.length}</span>
+          </div>
+
+          {orders.length === 0 && !loading ? (
+            <p style={{ color: '#64748b', padding: '16px 4px' }}>No orders yet.</p>
+          ) : (
+            orders.map((order) => (
+              <div key={order.id} style={cardStyle}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <p style={{ margin: '0 0 8px', fontSize: '1.1rem' }}>
+                    <strong>Order #{order.id}</strong>
+                  </p>
+                  <span style={{ display: 'inline-flex', padding: '6px 10px', borderRadius: '999px', background: order.order_status === 'shipped' ? '#dcfce7' : '#fef3c7', color: order.order_status === 'shipped' ? '#166534' : '#92400e', fontWeight: 700, fontSize: '0.8rem' }}>
+                    {order.order_status}
+                  </span>
                 </div>
-              ) : (
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
-                  <div>
-                    <h3 style={{ margin: '0 0 4px' }}>{product.name}</h3>
-                    <p style={{ margin: '4px 0' }}>${product.price}</p>
-                    <p style={{ margin: '4px 0' }}>{product.description}</p>
-                  </div>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                    <button type="button" onClick={() => startEdit(product)}>
-                      Edit
-                    </button>
-                    <button type="button" onClick={() => handleDeleteProduct(product.id)}>
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))
-        )}
-      </section>
-
-      <section style={{ marginTop: '40px' }}>
-        <h2>Orders ({orders.length})</h2>
-
-        {orders.length === 0 && !loading ? (
-          <p>No orders yet.</p>
-        ) : (
-          orders.map((order) => (
-            <div key={order.id} style={cardStyle}>
-              <p style={{ margin: '0 0 4px' }}>
-                <strong>Order #{order.id}</strong>
-              </p>
-              <p style={{ margin: '4px 0' }}>{order.customer_name}</p>
-              <p style={{ margin: '4px 0' }}>{order.customer_email}</p>
-              <p style={{ margin: '4px 0' }}>{order.customer_address}</p>
-              <p style={{ margin: '4px 0', fontWeight: 'bold' }}>
-                Total: ${getOrderTotal(order)}
-              </p>
-              <p style={{ margin: '4px 0' }}>
-                Status: <strong>{order.order_status}</strong>
-              </p>
-              {order.order_status !== 'shipped' && (
-                <button type="button" onClick={() => handleMarkAsShipped(order.id)}>
-                  Mark as Shipped
-                </button>
-              )}
-            </div>
-          ))
-        )}
-      </section>
+                <p style={{ margin: '8px 0', color: '#334155' }}>{order.customer_name}</p>
+                <p style={{ margin: '8px 0', color: '#334155' }}>{order.customer_email}</p>
+                <p style={{ margin: '8px 0', color: '#334155' }}>{order.customer_address}</p>
+                <p style={{ margin: '12px 0 8px', fontWeight: 800, fontSize: '1.15rem', color: '#0f172a' }}>
+                  Total: ${getOrderTotal(order)}
+                </p>
+                {order.order_status !== 'shipped' && (
+                  <button type="button" onClick={() => handleMarkAsShipped(order.id)} style={primaryButtonStyle}>
+                    Mark as Shipped
+                  </button>
+                )}
+              </div>
+            ))
+          )}
+        </section>
+      </div>
     </div>
   )
 }
