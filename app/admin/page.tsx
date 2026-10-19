@@ -30,6 +30,7 @@ export default function AdminPage() {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
   const [editingId, setEditingId] = useState<number | null>(null)
@@ -76,10 +77,33 @@ export default function AdminPage() {
     setSubmitting(true)
     setError('')
 
+    let imageUrl = ''
+
+    if (imageFile) {
+      const fileName = `${Date.now()}-${imageFile.name}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(fileName, imageFile)
+
+      if (uploadError) {
+        setError(uploadError.message)
+        setSubmitting(false)
+        return
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(fileName)
+
+      imageUrl = urlData.publicUrl
+    }
+
     const { error: insertError } = await supabase.from('products').insert({
       name,
       price: parseFloat(price),
       description,
+      image_url: imageUrl,
     })
 
     setSubmitting(false)
@@ -92,6 +116,7 @@ export default function AdminPage() {
     setName('')
     setPrice('')
     setDescription('')
+    setImageFile(null)
     fetchData()
   }
 
@@ -142,6 +167,22 @@ export default function AdminPage() {
 
     if (deleteError) {
       setError(deleteError.message)
+      return
+    }
+
+    fetchData()
+  }
+
+  const handleMarkAsShipped = async (orderId: number) => {
+    setError('')
+
+    const { error: updateError } = await supabase
+      .from('orders')
+      .update({ order_status: 'shipped' })
+      .eq('id', orderId)
+
+    if (updateError) {
+      setError(updateError.message)
       return
     }
 
@@ -208,6 +249,15 @@ export default function AdminPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
+              style={inputStyle}
+            />
+          </label>
+          <label>
+            Product Image
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
               style={inputStyle}
             />
           </label>
@@ -299,6 +349,14 @@ export default function AdminPage() {
               <p style={{ margin: '4px 0', fontWeight: 'bold' }}>
                 Total: ${getOrderTotal(order)}
               </p>
+              <p style={{ margin: '4px 0' }}>
+                Status: <strong>{order.order_status}</strong>
+              </p>
+              {order.order_status !== 'shipped' && (
+                <button type="button" onClick={() => handleMarkAsShipped(order.id)}>
+                  Mark as Shipped
+                </button>
+              )}
             </div>
           ))
         )}
