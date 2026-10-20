@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     const prompt = `You are a helpful assistant for a baby products store. Here are the available products:\n\n${productList}\n\nCustomer question: ${question}\n\nRecommend relevant products from the list above in a friendly, short response.`
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash',
       contents: prompt,
     })
 
