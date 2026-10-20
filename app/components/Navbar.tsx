@@ -49,6 +49,13 @@ export default function Navbar() {
         >
           Admin
         </Link>
+        <Link style={{ textDecoration: 'underline', color: '#2c3e50' , fontWeight: 'bold' ,backgroundColor: '#f0f0f0', padding: '5px 10px', borderRadius: '4px' }}
+          href="/ai-chat"
+          className="site-navbar__link site-navbar__ai-chat"
+          onClick={() => setMenuOpen(false)}
+        >
+          AI Chat
+        </Link>
       </div>
     </nav>
   )
