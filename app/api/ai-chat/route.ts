@@ -1,8 +1,8 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI } from '@google/genai'
 import { supabase } from '../../supabaseClient'
 import { NextResponse } from 'next/server'
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 export async function POST(request: Request) {
   try {
@@ -20,14 +20,14 @@ export async function POST(request: Request) {
       .map((p) => `- ${p.name}: $${p.price} — ${p.description}`)
       .join('\n')
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
-
     const prompt = `You are a helpful assistant for a baby products store. Here are the available products:\n\n${productList}\n\nCustomer question: ${question}\n\nRecommend relevant products from the list above in a friendly, short response.`
 
-    const result = await model.generateContent(prompt)
-    const text = result.response.text()
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    })
 
-    return NextResponse.json({ answer: text })
+    return NextResponse.json({ answer: response.text })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
