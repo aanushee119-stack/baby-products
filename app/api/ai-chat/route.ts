@@ -10,17 +10,17 @@ export async function POST(request: Request) {
 
     const { data: products, error } = await supabase
       .from('products')
-      .select('name, price, description')
+      .select('id, name, price, description, image_url')
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     const productList = products
-      .map((p) => `- ${p.name}: $${p.price} — ${p.description}`)
+      .map((p) => `- ID ${p.id}: ${p.name} ($${p.price}) — ${p.description} — Link: /products/${p.id}`)
       .join('\n')
 
-    const prompt = `You are a helpful assistant for a baby products store. Here are the available products:\n\n${productList}\n\nCustomer question: ${question}\n\nRecommend relevant products from the list above in a friendly, short response.`
+    const prompt = `You are a helpful assistant for a baby products store. Here are the available products:\n\n${productList}\n\nCustomer question: ${question}\n\nRecommend relevant products from the list above in a friendly, short response. Include the product link (like /products/1, /products/3, etc.) so customers can click directly to view and buy.`
 
     const response = await ai.models.generateContent({
       model: 'gemini-3.8-flash',
